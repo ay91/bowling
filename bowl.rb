@@ -1,23 +1,24 @@
-require_relative 'scoring'
+require './scoring.rb'
 
 class Bowl
 
-  attr_accessor :frames, :pin
+  attr_accessor :pin, :frames
 
-  def initialize(frames=[])
-    self.pin  = 0
-    self.frames = frames
+  def initialize
+    frames = Array.new
+      @frames = frames
+      @pin  = 0
   end
 
   def input_pins
 
-    input = []
-    24.times {|x| input << x = $stdin.gets}
+    puts "Enter score for 12 frames (two inputs per frame). Press Enter to skip empty input"
+    input = Array.new
+    24.times {|score| input << score = $stdin.gets}
     new_input = input.each_slice(2).to_a
 
     new_input.each_with_index do |pins, index|
       frames.push(Scoring.new(new_input[index][0], new_input[index][1], index))
-
     end
    self
   end
@@ -25,27 +26,27 @@ class Bowl
   def total_score
     frames.each do |frame|
 
-      if !(frames[9].spare?) && !(frames(9).strike?)
+      if !(frames[9].spare) && !(frames(9).strike)
         frames.reverse.drop(4).reverse
-      elsif frames[9].spare?
+      elsif frames[9].spare
         frames.reverse.drop(3).reverse
-      elsif frames[9].strike?
+      elsif frames[9].strike
         frames
       end
 
-      if frame.num < 9
-        if frame.strike?
-          self.pin += frame.pin + next_two_throws(frame.num)
+      if frame.seq < 9
+        if frame.strike
+          @pin += frame.pin + next_two_throws(frame.seq)
         else
-          self.pin += frame.pin
+          @pin += frame.pin
         end
       end
 
-      if frame.num >= 9
-        self.pin += frame.pin
+      if frame.seq >= 9
+        @pin += frame.pin
       end
 
-      puts "Frame #{frame.num + 1}: #{pin}"
+      puts "Frame #{frame.seq + 1}: #{pin}"
     end
   end
 
@@ -55,7 +56,7 @@ class Bowl
 
   def next_two_throws(current_frame)
     next_frame = next_frame(current_frame)
-    if next_frame.strike?
+    if next_frame.strike
       next_frame.pin + next_frame(current_frame + 1).throw1
     else
       next_frame.pin
