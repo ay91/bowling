@@ -26,12 +26,13 @@ class Bowl
   def total_score
     frames.each do |frame|
 
-      if !(frames[9].spare) && !(frames(9).strike)
-        frames.reverse.drop(4).reverse
-      elsif frames[9].spare
-        frames.reverse.drop(3).reverse
-      elsif frames[9].strike
-        frames
+      case frames
+        when !(frames[9].spare) && !(frames(9).strike)
+          frames.reverse.drop(4).reverse
+        when frames[9].spare
+          frames.reverse.drop(3).reverse
+        when frames[9].strike
+          frames
       end
 
       if frame.seq < 9
@@ -50,14 +51,14 @@ class Bowl
     end
   end
 
-  def next_frame(current_frame)
-    frames[current_frame + 1]
+  def next_frame(frame_now)
+    frames[frame_now + 1]
   end
 
-  def next_two_throws(current_frame)
-    next_frame = next_frame(current_frame)
+  def next_two_throws(frame_now)
+    next_frame = next_frame(frame_now)
     if next_frame.strike
-      next_frame.pin + next_frame(current_frame + 1).throw1
+      next_frame.pin + next_frame(frame_now + 1).throw1
     else
       next_frame.pin
     end
