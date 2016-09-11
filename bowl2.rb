@@ -25,16 +25,8 @@ class Bowl
   def total_score
     final_score = []
     frames.each do |frame|
-      # case frames
-      #   when !(frames[9].spare) && !(frames(9).strike)
-      #     frames.reverse.drop(4).reverse
-      #   when frames[9].spare
-      #     frames.reverse.drop(3).reverse
-      #   when frames[9].strike
-      #     frames
-      # end
 
-      if frame.seq < 9
+      if frame.seq < 8
         if frame.strike
           @pin += frame.pin + next_two_throws(frame.seq)
         else
@@ -42,9 +34,22 @@ class Bowl
         end
       end
 
-      if frame.seq >= 9
-        @pin += frame.pin
+      if frame.seq == 8
+        if frame.strike
+          @pin += frame.pin + next_frame(8).throw1 + next_frame(8).throw2
+        else
+          @pin += frame.pin
+        end
       end
+
+      if frame.seq == 9
+        if !(frame.strike || frame.spare)
+          @pin += frame.pin - frame.throw3
+        else
+          @pin += frame.pin
+        end
+      end
+
       final_score << pin
     end
     print final_score
